@@ -1,17 +1,31 @@
-. ~/bin/bash_colors.sh
+. ~/Desktop/usr/dist/dotfiles/bin/bash_colors.sh
 
 # Add paths that should have been there by default
 export PATH=${PATH}:/usr/local/bin
 export PATH="~/bin:$PATH"
 
+
+# source the virtualenvwrapper script
+export WORKON_HOME=~/.envs
+export VIRTUALENVWRAPPER_PYTHON=/Library/Frameworks/Python.framework/Versions/3.8/bin/python3
+export VIRTUALENVWRAPPER_VIRTUALENV=/Library/Frameworks/Python.framework/Versions/3.8/bin/virtualenv
+source /Library/Frameworks/Python.framework/Versions/3.8/bin/virtualenvwrapper.sh
+
+# aliases for jupyter notebook
+alias jn='jupyter notebook'
+
+
 # Unbreak broken, non-colored terminal
 export TERM='xterm-color'
 # export TERM='cygwin'
 alias ls='ls -G'
-alias ll='ls -lG'
+alias ll='ls -lahG'
+alias dev='cd ~/Desktop/usr/dev'
+alias ..='cd ..'
 
 # Alias python to python interactive to make it work on git bash
-alias python3='winpty python'
+# alias python3='winpty python'
+alias python='python3'
 
 export LSCOLORS="ExGxBxDxCxEgEdxbxgxcxd"
 export GREP_OPTIONS="--color"
@@ -21,7 +35,7 @@ export HISTCONTROL=erasedups
 # Store 10k history entries
 export HISTSIZE=10000
 # Append to the history file when exiting instead of overwriting it
-shopt -s histappend
+# shopt -s histappend
 
 # Git prompt components
 function minutes_since_last_commit {
@@ -42,8 +56,8 @@ grb_git_prompt() {
         else
             local COLOR=${GREEN}
         fi
-        #local SINCE_LAST_COMMIT="\[${COLOR}\]$(minutes_since_last_commit)m\[${NORMAL}\]"
-        local SINCE_LAST_COMMIT="$(minutes_since_last_commit)m"
+        local SINCE_LAST_COMMIT="${COLOR}$(minutes_since_last_commit)m${NORMAL}"
+        #local SINCE_LAST_COMMIT="$(minutes_since_last_commit)m"
         # The __git_ps1 function inserts the current git branch where %s is
         #echo -n `__git_ps1 "(%s|${SINCE_LAST_COMMIT})"`
         local GIT_PROMPT=`__git_ps1 "(%s|${SINCE_LAST_COMMIT}) "`
@@ -64,24 +78,8 @@ shortwd() {
     fi
     echo -n $newPWD
 }
-#PS1="\u:\[${VIOLET}\]\$(shortwd)\[${NORMAL}\] \$(grb_git_prompt) > "
-PS1="\u:\[${VIOLET}\]\$(shortwd)\[${NORMAL}\] > "
+#PS1="\u:\[${VIOLET}\]\$(shortwd)\[${NORMAL}\] \$(grb_git_prompt)# "
+PS1="\[${VIOLET}\]\$(shortwd)\[${NORMAL}\] # "
 
-activate_virtualenv() {
-    if [ -f env/bin/activate ]; then . env/bin/activate;
-    elif [ -f ../env/bin/activate ]; then . ../env/bin/activate;
-    elif [ -f ../../env/bin/activate ]; then . ../../env/bin/activate;
-    elif [ -f ../../../env/bin/activate ]; then . ../../../env/bin/activate;
-    fi
-}
-
-python_module_dir () {
-    echo "$(python -c "import os.path as _, ${1}; \
-        print _.dirname(_.realpath(${1}.__file__[:-1]))"
-        )"
-}
-
-source ~/bin/git-completion.bash
-
-PATH=$PATH:$HOME/.rvm/bin # Add RVM to PATH for scripting
+source ~/Desktop/usr/dist/dotfiles/bin/git-completion.bash
 
